@@ -1,7 +1,6 @@
-name: Build Windows EXE
+name: Build PSX Signals EXE (Windows)
 
-on:
-  workflow_dispatch:
+on: [workflow_dispatch]
 
 jobs:
   build:
@@ -18,15 +17,19 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install pyinstaller pandas openpyxl
+          python -m pip install --upgrade pip
+          pip install pyinstaller yfinance pandas PyQt5 openpyxl numpy
 
-      - name: Build EXE
+      - name: Build executable
         run: |
-          pyinstaller --onefile "PSX_Excel_1Min_RealTime_App_TrendVolume.py"
+          pyinstaller --onefile ^
+            --name "PSX Signals 1H" ^
+            --add-data "psx.xlsx;." ^
+            PSX_Excel_1Min_RealTime_App_TrendVolume_Fixed.py
         shell: cmd
 
-      - name: Upload EXE Artifact
+      - name: Upload built EXE
         uses: actions/upload-artifact@v4
         with:
-          name: PSX_Signals_1H_EXE
+          name: PSX_Signals_EXE
           path: dist/*.exe
