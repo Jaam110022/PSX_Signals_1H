@@ -1,0 +1,5 @@
+yfinance
+pandas
+PyQt5
+openpyxl
+numpy
