@@ -1,33 +1,32 @@
-name: Build PSX Signals 1H (Windows)
+name: Build Windows EXE
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ main ]
 
 jobs:
-  build-windows:
+  build:
     runs-on: windows-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
 
-      - name: Set up Python
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install pyinstaller yfinance pandas PyQt5 openpyxl
+          pip install pyinstaller pandas openpyxl
 
-      - name: Build exe with PyInstaller
+      - name: Build EXE
         run: |
-          pyinstaller --onefile --name "PSX Signals 1H" --add-data "psx.xlsx;." PSX_Excel_1Min_RealTime_App_TrendVolume.py
+          pyinstaller --onefile "PSX_Excel_1Min_RealTime_App_TrendVolume.py"
+        shell: cmd
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload EXE Artifact
+        uses: actions/upload-artifact@v3
         with:
-          name: PSX-Signals-1H-exe
-          path: dist/PSX\ Signals\ 1H.exe
+          name: PSX_Signals_1H_EXE
+          path: dist/*.exe
